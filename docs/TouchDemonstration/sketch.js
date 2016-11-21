@@ -1,5 +1,5 @@
 function setup() {
-	createCanvas(600, 600); // make a 600 x 600 canvas in which to interact and draw
+  createCanvas(windowWidth,windowHeight); //make a fullscreen canvas, thanks to: http://codepen.io/grayfuse/pen/wKqLGL
 }
 
 function draw() {
