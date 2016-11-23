@@ -13,7 +13,7 @@ function setup() {
 }
 
 function draw() {
-	background(255); //white background
+  background(255); //white background
   noStroke();
   for (var i=0; i<circles.length; i++) {
     circles[i].display();
@@ -24,218 +24,252 @@ function keyTyped(){
   var lowerCaseKey = key.toLowerCase(); //key is a system variable via https://p5js.org/reference/#/p5/key
   for (var i=0; i<circles.length; i++) {
     if(lowerCaseKey == circles[i].key){
-      circles[i].scaleUp();
+      circles[i].scaleUpandDown();
     }
   }
-	return false; //https://p5js.org/reference/#/p5/keyTyped preventing default behaviour
+  return false; //https://p5js.org/reference/#/p5/keyTyped preventing default behaviour
 }
 
 function ScalingCircle(aKey){ //ScalingCircle object
   this.key = aKey;
-  this.circleStartRadius = 100;
-  this.circleEndRadius = 200;
-  this.circleRadius = this.circleStartRadius;
-  this.targetCircleRadius = this.circleStartRadius;
+  this.circleBigRadius = 200;
+  this.circleSmallRadius = 100;
+  this.circleRadius = this.circleSmallRadius;
   this.position = createVector(-1,-1);
   this.position = getCanvasPositionFromKey(aKey);
   this.colour = color(random(100),50,100,50); //random hue, saturation 50% and brightness 100%, alpha 50%
-  this.easing = 0.3;
+  this.millisToScaleUp = 50;
+  this.millisToScaleDown = 200;
+  this.startScale = 0;
+  this.endScale = 0;
+  this.scaling = false;
 
   this.display = function(){
-    var differenceInRadius = this.targetCircleRadius - this.circleRadius;
-    var changeThisFrame = differenceInRadius*this.easing;
-    this.circleRadius += changeThisFrame;
+    if(this.scaling){
+      this.scale();
+    }
     var translatedX = this.position.x * windowWidth;
     var translatedY = this.position.y * windowHeight;
     fill(this.colour);
     ellipse(translatedX, translatedY, this.circleRadius, this.circleRadius);
   }; //don't forget to close your method!
 
-  this.scaleUp = function(){
-    this.targetCircleRadius = this.circleEndRadius;
+  this.scale = function(){
+    var now = millis();
+    var millisElapsed = now-this.startScale;
+
+    if(millisElapsed < this.millisToScaleUp){
+      var howFarAlongScaleUp = millisElapsed/this.millisToScaleUp;
+      this.scaleUp(howFarAlongScaleUp);
+    }else{
+      var howFarAlongScaleDown = (millisElapsed-this.millisToScaleUp)/this.millisToScaleDown;
+      this.scaleDown(howFarAlongScaleDown);
+    }
+
+    if(now >= this.endScale){
+      this.scaling = false;
+    }
+  }
+
+  this.scaleUp = function(howFarAlongScale){
+    var differenceInRadius = this.circleBigRadius - this.circleSmallRadius;
+    var newRadius = this.circleSmallRadius+(howFarAlongScale*differenceInRadius);
+    this.circleRadius = newRadius;
+  }
+
+  this.scaleDown = function(howFarAlongScale){
+    var differenceInRadius = this.circleBigRadius - this.circleSmallRadius;
+    var newRadius = this.circleBigRadius-(howFarAlongScale*differenceInRadius);
+    this.circleRadius = newRadius;
+  }
+
+  this.scaleUpandDown = function(){
+    this.scaling = true;
+    this.startScale = millis();
+    this.endScale = this.startScale+this.millisToScaleUp+this.millisToScaleDown;
   }
 }
 
 function getCanvasPositionFromKey(aKey){
-	var canvasPosition =  createVector(-1,-1); //off screen for now
-	var numberOfRows = 4;
-	var yNudge = (1/numberOfRows)/2;
+  var canvasPosition =  createVector(-1,-1); //off screen for now
+  var numberOfRows = 4;
+  var yNudge = (1/numberOfRows)/2;
 
-	switch(aKey) {
-		case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9': case '0':
-			canvasPosition.y = 0+yNudge;
-			canvasPosition.x = findXOnFirstRowKey(aKey);
-			break;
-		case 'q': case 'w': case 'e': case 'r': case 't': case 'y': case 'u': case 'i': case 'o': case 'p':
-		case 'Q': case 'W': case 'E': case 'R': case 'T': case 'Y': case 'U': case 'I': case 'O': case 'P':
-			canvasPosition.y = 0.25+yNudge;
-			canvasPosition.x = findXOnSecondRowKey(aKey);
-			break;
-		case 'a': case 's': case 'd': case 'f': case 'g': case 'h': case 'j': case 'k': case 'l':
-		case 'A': case 'S': case 'D': case 'F': case 'G': case 'H': case 'J': case 'K': case 'L':
-			canvasPosition.y = 0.5+yNudge;
-			canvasPosition.x = findXOnThirdRowKey(aKey);
-			break;
-		case 'z': case 'x': case 'c': case 'v': case 'b': case 'n': case 'm':
-		case 'Z': case 'X': case 'C': case 'V': case 'B': case 'N': case 'M':
-			canvasPosition.y = 0.75+yNudge;
-			canvasPosition.x = findXOnFourthRowKey(aKey);
-			break;
-	}
+  switch(aKey) {
+    case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9': case '0':
+    canvasPosition.y = 0+yNudge;
+    canvasPosition.x = findXOnFirstRowKey(aKey);
+    break;
+    case 'q': case 'w': case 'e': case 'r': case 't': case 'y': case 'u': case 'i': case 'o': case 'p':
+    case 'Q': case 'W': case 'E': case 'R': case 'T': case 'Y': case 'U': case 'I': case 'O': case 'P':
+    canvasPosition.y = 0.25+yNudge;
+    canvasPosition.x = findXOnSecondRowKey(aKey);
+    break;
+    case 'a': case 's': case 'd': case 'f': case 'g': case 'h': case 'j': case 'k': case 'l':
+    case 'A': case 'S': case 'D': case 'F': case 'G': case 'H': case 'J': case 'K': case 'L':
+    canvasPosition.y = 0.5+yNudge;
+    canvasPosition.x = findXOnThirdRowKey(aKey);
+    break;
+    case 'z': case 'x': case 'c': case 'v': case 'b': case 'n': case 'm':
+    case 'Z': case 'X': case 'C': case 'V': case 'B': case 'N': case 'M':
+    canvasPosition.y = 0.75+yNudge;
+    canvasPosition.x = findXOnFourthRowKey(aKey);
+    break;
+  }
 
-	return canvasPosition;
+  return canvasPosition;
 }
 
 function findXOnFirstRowKey(aKey){
-	//10 keys on the first row
-	var numberOfCharacters = 10;
-	var xNudge = (1/numberOfCharacters)/2;
+  //10 keys on the first row
+  var numberOfCharacters = 10;
+  var xNudge = (1/numberOfCharacters)/2;
 
-	var relativeXPosition = 0.0;
-	switch(aKey) {
-		case '1':
-			relativeXPosition = 0.0+xNudge;
-			break;
-		case '2':
-			relativeXPosition = 0.1+xNudge;
-			break;
-		case '3':
-			relativeXPosition = 0.2+xNudge;
-			break;
-		case '4':
-			relativeXPosition = 0.3+xNudge;
-			break;
-		case '5':
-			relativeXPosition = 0.4+xNudge;
-			break;
-		case '6':
-			relativeXPosition = 0.5+xNudge;
-			break;
-		case '7':
-			relativeXPosition = 0.6+xNudge;
-			break;
-		case '8':
-			relativeXPosition = 0.7+xNudge;
-			break;
-		case '9':
-			relativeXPosition = 0.8+xNudge;
-			break;
-		case '0':
-			relativeXPosition = 0.9+xNudge;
-			break;
-	}
-	return relativeXPosition;
+  var relativeXPosition = 0.0;
+  switch(aKey) {
+    case '1':
+    relativeXPosition = 0.0+xNudge;
+    break;
+    case '2':
+    relativeXPosition = 0.1+xNudge;
+    break;
+    case '3':
+    relativeXPosition = 0.2+xNudge;
+    break;
+    case '4':
+    relativeXPosition = 0.3+xNudge;
+    break;
+    case '5':
+    relativeXPosition = 0.4+xNudge;
+    break;
+    case '6':
+    relativeXPosition = 0.5+xNudge;
+    break;
+    case '7':
+    relativeXPosition = 0.6+xNudge;
+    break;
+    case '8':
+    relativeXPosition = 0.7+xNudge;
+    break;
+    case '9':
+    relativeXPosition = 0.8+xNudge;
+    break;
+    case '0':
+    relativeXPosition = 0.9+xNudge;
+    break;
+  }
+  return relativeXPosition;
 }
 
 function findXOnSecondRowKey(aKey){
-	//10 keys on the second row
-	var numberOfCharacters = 10;
-	var xNudge = (1/numberOfCharacters)/2;
+  //10 keys on the second row
+  var numberOfCharacters = 10;
+  var xNudge = (1/numberOfCharacters)/2;
 
-	var relativeXPosition = 0.0;
-	switch(aKey) {
-		case 'q': case 'Q':
-			relativeXPosition = 0.0+xNudge;
-			break;
-		case 'w': case 'W':
-			relativeXPosition = 0.1+xNudge;
-			break;
-		case 'e': case 'E':
-			relativeXPosition = 0.2+xNudge;
-			break;
-		case 'r': case 'R':
-			relativeXPosition = 0.3+xNudge;
-			break;
-		case 't': case 'T':
-			relativeXPosition = 0.4+xNudge;
-			break;
-		case 'y': case 'Y':
-			relativeXPosition = 0.5+xNudge;
-			break;
-		case 'u': case 'U':
-			relativeXPosition = 0.6+xNudge;
-			break;
-		case 'i': case 'I':
-			relativeXPosition = 0.7+xNudge;
-			break;
-		case 'o': case 'O':
-			relativeXPosition = 0.8+xNudge;
-			break;
-		case 'p': case 'P':
-			relativeXPosition = 0.9+xNudge;
-			break;
-	}
-	return relativeXPosition;
+  var relativeXPosition = 0.0;
+  switch(aKey) {
+    case 'q': case 'Q':
+    relativeXPosition = 0.0+xNudge;
+    break;
+    case 'w': case 'W':
+    relativeXPosition = 0.1+xNudge;
+    break;
+    case 'e': case 'E':
+    relativeXPosition = 0.2+xNudge;
+    break;
+    case 'r': case 'R':
+    relativeXPosition = 0.3+xNudge;
+    break;
+    case 't': case 'T':
+    relativeXPosition = 0.4+xNudge;
+    break;
+    case 'y': case 'Y':
+    relativeXPosition = 0.5+xNudge;
+    break;
+    case 'u': case 'U':
+    relativeXPosition = 0.6+xNudge;
+    break;
+    case 'i': case 'I':
+    relativeXPosition = 0.7+xNudge;
+    break;
+    case 'o': case 'O':
+    relativeXPosition = 0.8+xNudge;
+    break;
+    case 'p': case 'P':
+    relativeXPosition = 0.9+xNudge;
+    break;
+  }
+  return relativeXPosition;
 }
 
 function findXOnThirdRowKey(aKey){
-	//9 keys on the third row
-	var numberOfCharacters = 9;
-	var ratio = 1.0/numberOfCharacters;
-	var xNudge = (1/numberOfCharacters)/2;
+  //9 keys on the third row
+  var numberOfCharacters = 9;
+  var ratio = 1.0/numberOfCharacters;
+  var xNudge = (1/numberOfCharacters)/2;
 
-	var relativeXPosition = 0.0;
-	switch(aKey) {
-		case 'a': case 'A':
-			relativeXPosition = (0*ratio)+xNudge;
-			break;
-		case 's': case 'S':
-			relativeXPosition = (1*ratio)+xNudge;
-			break;
-		case 'd': case 'D':
-			relativeXPosition = (2*ratio)+xNudge;
-			break;
-		case 'f': case 'F':
-			relativeXPosition = (3*ratio)+xNudge;
-			break;
-		case 'g': case 'G':
-			relativeXPosition = (4*ratio)+xNudge;
-			break;
-		case 'h': case 'H':
-			relativeXPosition = (5*ratio)+xNudge;
-			break;
-		case 'j': case 'J':
-			relativeXPosition = (6*ratio)+xNudge;
-			break;
-		case 'k': case 'K':
-			relativeXPosition = (7*ratio)+xNudge;
-			break;
-		case 'l': case 'L':
-			relativeXPosition = (8*ratio)+xNudge;
-			break;
-	}
-	return relativeXPosition;
+  var relativeXPosition = 0.0;
+  switch(aKey) {
+    case 'a': case 'A':
+    relativeXPosition = (0*ratio)+xNudge;
+    break;
+    case 's': case 'S':
+    relativeXPosition = (1*ratio)+xNudge;
+    break;
+    case 'd': case 'D':
+    relativeXPosition = (2*ratio)+xNudge;
+    break;
+    case 'f': case 'F':
+    relativeXPosition = (3*ratio)+xNudge;
+    break;
+    case 'g': case 'G':
+    relativeXPosition = (4*ratio)+xNudge;
+    break;
+    case 'h': case 'H':
+    relativeXPosition = (5*ratio)+xNudge;
+    break;
+    case 'j': case 'J':
+    relativeXPosition = (6*ratio)+xNudge;
+    break;
+    case 'k': case 'K':
+    relativeXPosition = (7*ratio)+xNudge;
+    break;
+    case 'l': case 'L':
+    relativeXPosition = (8*ratio)+xNudge;
+    break;
+  }
+  return relativeXPosition;
 }
 
 function findXOnFourthRowKey(aKey){
-	//7 keys on the third row
-	var numberOfCharacters = 7;
-	var ratio = 1/numberOfCharacters;
-	var xNudge = (1/numberOfCharacters)/2;
+  //7 keys on the third row
+  var numberOfCharacters = 7;
+  var ratio = 1/numberOfCharacters;
+  var xNudge = (1/numberOfCharacters)/2;
 
-	var relativeXPosition = 0.0;
-	switch(aKey) {
-		case 'z': case 'Z':
-			relativeXPosition = (0*ratio)+xNudge;
-			break;
-		case 'x': case 'X':
-			relativeXPosition = (1*ratio)+xNudge;
-			break;
-		case 'c': case 'C':
-			relativeXPosition = (2*ratio)+xNudge;
-			break;
-		case 'v': case 'V':
-			relativeXPosition = (3*ratio)+xNudge;
-			break;
-		case 'b': case 'B':
-			relativeXPosition = (4*ratio)+xNudge;
-			break;
-		case 'n': case 'N':
-			relativeXPosition = (5*ratio)+xNudge;
-			break;
-		case 'm': case 'M':
-			relativeXPosition = (6*ratio)+xNudge;
-			break;
-	}
-	return relativeXPosition;
+  var relativeXPosition = 0.0;
+  switch(aKey) {
+    case 'z': case 'Z':
+    relativeXPosition = (0*ratio)+xNudge;
+    break;
+    case 'x': case 'X':
+    relativeXPosition = (1*ratio)+xNudge;
+    break;
+    case 'c': case 'C':
+    relativeXPosition = (2*ratio)+xNudge;
+    break;
+    case 'v': case 'V':
+    relativeXPosition = (3*ratio)+xNudge;
+    break;
+    case 'b': case 'B':
+    relativeXPosition = (4*ratio)+xNudge;
+    break;
+    case 'n': case 'N':
+    relativeXPosition = (5*ratio)+xNudge;
+    break;
+    case 'm': case 'M':
+    relativeXPosition = (6*ratio)+xNudge;
+    break;
+  }
+  return relativeXPosition;
 }
