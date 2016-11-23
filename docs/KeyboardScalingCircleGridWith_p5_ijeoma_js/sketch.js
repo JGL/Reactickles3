@@ -1,6 +1,8 @@
 var characterSize = 50;
 var circles = []; //array of ScalingCircle objects
 var allTheKeys = "1234567890qwertyuiopasdfghjklzxcvbnm";
+var circleStartRadius = 100;
+var circleEndRadius = 200;
 
 function setup() {
   createCanvas(windowWidth,windowHeight); //make a fullscreen canvas, thanks to: http://codepen.io/grayfuse/pen/wKqLGL
@@ -10,6 +12,8 @@ function setup() {
     circles.push(new ScalingCircle(allTheKeys[i]));
   }
   console.log("The size of the circles array is " + circles.length);
+
+  useOnce(); //all tweens only exist once, see https://github.com/ekeneijeoma/p5.ijeoma.js
 }
 
 function draw() {
@@ -24,7 +28,7 @@ function keyTyped(){
   var lowerCaseKey = key.toLowerCase(); //key is a system variable via https://p5js.org/reference/#/p5/key
   for (var i=0; i<circles.length; i++) {
     if(lowerCaseKey == circles[i].key){
-      circles[i].scaleUp();
+      circles[i].scaleUpAndThenDown();
     }
   }
 	return false; //https://p5js.org/reference/#/p5/keyTyped preventing default behaviour
@@ -32,27 +36,28 @@ function keyTyped(){
 
 function ScalingCircle(aKey){ //ScalingCircle object
   this.key = aKey;
-  this.circleStartRadius = 100;
-  this.circleEndRadius = 200;
-  this.circleRadius = this.circleStartRadius;
-  this.targetCircleRadius = this.circleStartRadius;
+  this.startCircleRadius = 100;
+  this.endCircleRadius = 200;
+  this.circleRadius = this.startCircleRadius; //start with the start
+  this.scaleUpDuration = 0.5; //take half of a second to scale up
+  this.scaleDownDelay = this.scaleUpDuration; //wait until the scale up is down to scale down
+  this.scaleDownDuration = 0.25; //take quarter of a second to scale down
   this.position = createVector(-1,-1);
   this.position = getCanvasPositionFromKey(aKey);
   this.colour = color(random(100),50,100,50); //random hue, saturation 50% and brightness 100%, alpha 50%
-  this.easing = 0.3;
 
   this.display = function(){
-    var differenceInRadius = this.targetCircleRadius - this.circleRadius;
-    var changeThisFrame = differenceInRadius*this.easing;
-    this.circleRadius += changeThisFrame;
     var translatedX = this.position.x * windowWidth;
     var translatedY = this.position.y * windowHeight;
     fill(this.colour);
     ellipse(translatedX, translatedY, this.circleRadius, this.circleRadius);
   }; //don't forget to close your method!
 
-  this.scaleUp = function(){
-    this.targetCircleRadius = this.circleEndRadius;
+  this.scaleUpAndThenDown = function(){
+    //syntax for tweens is createTween(object property, end, duration, [delay], [easing])
+    //see https://github.com/ekeneijeoma/p5.ijeoma.js
+    var scaleUpTween = createTween('this.circleRadius', this.endCircleRadius, this.scaleUpDuration).easing(Quad.In).play();
+    var scaleDownTween = createTween('this.circleRadius', this.startCircleRadius, this.scaleDownDuration, this.scaleDownDelay).easing(Quad.Out).play();
   }
 }
 
