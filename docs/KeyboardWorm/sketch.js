@@ -1,6 +1,6 @@
-var worm = []; //array of ScalingCircle objects
+var worm = []; //array of WormSegment objects
+var wormLength = 30; //number of segments of the worm
 var allTheKeys = "1234567890qwertyuiopasdfghjklzxcvbnm";
-var wormLength = 30; //number of segements of the worm
 
 function setup() {
   createCanvas(windowWidth,windowHeight); //make a fullscreen canvas, thanks to: http://codepen.io/grayfuse/pen/wKqLGL
@@ -53,7 +53,6 @@ function drawWorm(){
 }
 
 function seekWormTowardsKey(aKey){
-  var positionOfKey = createVector(-1,-1);
   var lowerCaseKey = key.toLowerCase(); //key is a system variable via https://p5js.org/reference/#/p5/key, toLowerCase via http://www.w3schools.com/jsref/jsref_tolowercase.asp
 
   if(allTheKeys.includes(lowerCaseKey)){
