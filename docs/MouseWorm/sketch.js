@@ -1,97 +1,95 @@
-var characterSize = 50;
-var circles = []; //array of ScalingCircle objects
+var worm = []; //array of ScalingCircle objects
 var allTheKeys = "1234567890qwertyuiopasdfghjklzxcvbnm";
+var wormLength = 30; //number of segements of the worm
 
 function setup() {
   createCanvas(windowWidth,windowHeight); //make a fullscreen canvas, thanks to: http://codepen.io/grayfuse/pen/wKqLGL
-  textSize(characterSize);
+  noStroke(); //no outlines, just filled shapes
   colorMode(HSB, 100);// Use HSB with scale of 0-100, see https://p5js.org/reference/#/p5/color
-  for (var i=0; i < allTheKeys.length; i++) {
-    circles.push(new ScalingCircle(allTheKeys[i]));
+  var segmentColourMaxBrightness = 100;
+  var segmentColourMinBrightness = 80;
+  var segmentColourBrightnessRatio = (segmentColourMaxBrightness-segmentColourMinBrightness)/wormLength;
+  var segmentColour = color(random(100),50,segmentColourMaxBrightness, 100); //random hue, saturation 50%, brightness 100%, alpha 100%
+  var segmentMaxRadius = 100;
+  var segmentMinRadius = 70;
+  var segmentRadiusRatio = (segmentMaxRadius-segmentMinRadius)/wormLength;
+  var segmentRadius = segmentMaxRadius;
+
+  for (var i=0; i < wormLength; i++) {
+    worm.push(new WormSegment(segmentColour, segmentRadius));
+    segmentRadius -= segmentRadiusRatio;
+    segmentColour = color(hue(segmentColour), saturation(segmentColour), brightness(segmentColour)-segmentColourBrightnessRatio, alpha(segmentColour));
   }
-  console.log("The size of the circles array is " + circles.length);
+  console.log("The length of the worm is " + worm.length);
 }
 
 function draw() {
   background(255); //white background
-  noStroke();
-  for (var i=0; i<circles.length; i++) {
-    circles[i].display();
+  updateWorm();
+  drawWorm();
+}
+
+function updateWorm(){
+  //uncomment two lines below to follow the mouse
+  var relativeMousePos = createVector(mouseX/windowWidth, mouseY/windowHeight);
+  seekWormTowardsPosition(relativeMousePos);
+
+  //uncomment line below to follow keys
+  //seekWormTowardsKey(key);
+
+  //starting at back of the worm, copy the previous worm segments position onto the current segments position
+  for (var i = (worm.length-1); i > 0; i--) {
+    worm[i].position.x = worm[i-1].position.x;
+    worm[i].position.y = worm[i-1].position.y;
+    //had to copy both values - not the reference, worm[i].position = worm[i-1].position doesn't work
   }
+}
+
+function drawWorm(){
+  //draw the first segment of the worm last so that the shading looks correct
+  for (var i = (worm.length-1); i > 0; i--) {
+    worm[i].display();
+  }
+}
+
+function seekWormTowardsKey(aKey){
+  var positionOfKey = createVector(-1,-1);
+  var lowerCaseKey = key.toLowerCase(); //key is a system variable via https://p5js.org/reference/#/p5/key, toLowerCase via http://www.w3schools.com/jsref/jsref_tolowercase.asp
+
+  if(allTheKeys.includes(lowerCaseKey)){
+    //if the key is a valid one, then seek the worm towards it
+    seekWormTowardsPosition(getCanvasPositionFromKey(lowerCaseKey));
+  }
+}
+
+function seekWormTowardsPosition(relativeSeekPosition){
+  var easing = 0.05;
+  //move the head of the worm a bit closer... via https://processing.org/examples/easing.html
+  var dx = relativeSeekPosition.x - worm[0].position.x;
+  worm[0].position.x += dx * easing;
+  var dy = relativeSeekPosition.y - worm[0].position.y;
+  worm[0].position.y += dy * easing;
 }
 
 function keyTyped(){
-  var lowerCaseKey = key.toLowerCase(); //key is a system variable via https://p5js.org/reference/#/p5/key
-  for (var i=0; i<circles.length; i++) {
-    if(lowerCaseKey == circles[i].key){
-      circles[i].scaleUpandDown();
-    }
-  }
   return false; //https://p5js.org/reference/#/p5/keyTyped preventing default behaviour
 }
 
-function ScalingCircle(aKey){ //ScalingCircle object
-  this.key = aKey;
-  this.circleBigRadius = 300;
-  this.circleSmallRadius = 100;
-  this.circleRadius = this.circleSmallRadius;
-  this.position = createVector(-1,-1);
-  this.position = getCanvasPositionFromKey(aKey);
-  this.colour = color(random(100),50,100,50); //random hue, saturation 50% and brightness 100%, alpha 50%
-  this.millisToScaleUp = 50;
-  this.millisToScaleDown = 500;
-  this.startScale = 0;
-  this.endScale = 0;
-  this.scaling = false;
+function WormSegment(aColour,aRadius){ //WormSegment object
+  this.radius = aRadius;
+  this.position = createVector(0.5,0.5); //start in centre of screen
+  this.colour = aColour;
 
   this.display = function(){
-    if(this.scaling){
-      this.scale();
-    }
     var translatedX = this.position.x * windowWidth;
     var translatedY = this.position.y * windowHeight;
     fill(this.colour);
-    ellipse(translatedX, translatedY, this.circleRadius, this.circleRadius);
-  }; //don't forget to close your method!
-
-  this.scale = function(){
-    var now = millis();
-    var millisElapsed = now-this.startScale;
-
-    if(millisElapsed < this.millisToScaleUp){
-      var howFarAlongScaleUp = millisElapsed/this.millisToScaleUp;
-      this.scaleUp(howFarAlongScaleUp);
-    }else{
-      var howFarAlongScaleDown = (millisElapsed-this.millisToScaleUp)/this.millisToScaleDown;
-      this.scaleDown(howFarAlongScaleDown);
-    }
-
-    if(now >= this.endScale){
-      this.scaling = false;
-    }
-  }
-
-  this.scaleUp = function(howFarAlongScale){
-    var differenceInRadius = this.circleBigRadius - this.circleSmallRadius;
-    var newRadius = this.circleSmallRadius+(howFarAlongScale*differenceInRadius);
-    this.circleRadius = newRadius;
-  }
-
-  this.scaleDown = function(howFarAlongScale){
-    var differenceInRadius = this.circleBigRadius - this.circleSmallRadius;
-    var newRadius = this.circleBigRadius-(howFarAlongScale*differenceInRadius);
-    this.circleRadius = newRadius;
-  }
-
-  this.scaleUpandDown = function(){
-    this.scaling = true;
-    this.startScale = millis();
-    this.endScale = this.startScale+this.millisToScaleUp+this.millisToScaleDown;
+    ellipse(translatedX, translatedY, this.radius, this.radius);
   }
 }
 
-function getCanvasPositionFromKey(aKey){
-  var canvasPosition =  createVector(-1,-1); //off screen for now
+function getCanvasPositionFromKey(aKey){ //returns the position of a key onscreen in the form of a vector between 0..1 where 0,0 is top left and 1,1 is bottom right of screen - i.e. relative screen ratio rather than absolute pixel position
+  var canvasPosition =  createVector(0.5,0.5); //centre of screen for now
   var numberOfRows = 4;
   var yNudge = (1/numberOfRows)/2;
 
