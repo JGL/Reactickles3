@@ -62,7 +62,7 @@ function keyTyped(){
 
 function WormSegment(aColour,aRadius){ //WormSegment object
   this.radius = aRadius;
-  this.position = createVector(0.5,0.5); //start in centre of screen
+  this.position = createVector(0.0, 0.0); //start in top left of screen
   this.colour = aColour;
 
   this.display = function(){
