@@ -60,6 +60,10 @@ function keyTyped(){
   return false; //https://p5js.org/reference/#/p5/keyTyped preventing default behaviour
 }
 
+function touchMoved(){
+return false; //https://p5js.org/reference/#/p5/touchMoved
+}
+
 function WormSegment(aColour,aRadius){ //WormSegment object
   this.radius = aRadius;
   this.position = createVector(0.0, 0.0); //start in top left of screen
