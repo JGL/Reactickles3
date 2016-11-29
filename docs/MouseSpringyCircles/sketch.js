@@ -5,7 +5,8 @@ var allTheKeys = "1234567890qwertyuiopasdfghjklzxcvbnm";
 function setup() {
   createCanvas(windowWidth,windowHeight); //make a fullscreen canvas, thanks to: http://codepen.io/grayfuse/pen/wKqLGL
   noStroke(); //no outlines, just filled shapes
-  colorMode(HSB, 100);// Use HSB with scale of 0-100, see https://p5js.org/reference/#/p5/color
+  colorMode(HSB, 100); //Use HSB with scale of 0-100, see https://p5js.org/reference/#/p5/color
+  ellipseMode(RADIUS); //https://p5js.org/reference/#/p5/ellipseMode draw with a radius rather than a width
 
   for (var i=0; i < numberOfSpringyCircles; i++) {
     springyCircles.push(new SpringyCircle());
@@ -29,7 +30,7 @@ function checkIfCirclesShouldSpring(){
     var positionOfCircleInPixels = createVector(springyCircles[i].position.x * windowWidth, springyCircles[i].position.y * windowHeight);
     var distanceBetweenMouseAndCircle = dist(mouseX, mouseY, positionOfCircleInPixels.x, positionOfCircleInPixels.y); //https://p5js.org/reference/#/p5/dist
 
-    if(distanceBetweenMouseAndCircle < (springyCircles[i].radius)){ //this is resulting in a bug - radius/2 works properly, but why isn't radius alone giving the correct interaction?
+    if(distanceBetweenMouseAndCircle < (springyCircles[i].radius)){
       //if the mouse is under the springy circle, then spring/move it
       springyCircles[i].moveSpring();
     }
@@ -53,8 +54,8 @@ function keyTyped(){
 }
 
 function SpringyCircle(){ //SpringyCircle object
-  var circleMinRadius = 100;
-  var circleMaxRadius = 200;
+  var circleMinRadius = 50;
+  var circleMaxRadius = 100;
   this.colour = color(random(100),50,100,50);; //random hue, saturation 50%, brightness 100%, alpha 50%
   this.radius = random(circleMinRadius,circleMaxRadius);
   this.position = createVector(random(windowWidth)/windowWidth,random(windowHeight)/windowHeight);
@@ -77,7 +78,7 @@ function SpringyCircle(){ //SpringyCircle object
     var translatedX = this.position.x * windowWidth;
     var translatedY = this.position.y * windowHeight;
     fill(this.colour);
-    ellipse(translatedX, translatedY, this.radius, this.radius);
+    ellipse(translatedX, translatedY, this.radius); // https://p5js.org/reference/#/p5/ellipse and https://p5js.org/reference/#/p5/ellipseMode
   }
 
   this.spring = function(){

@@ -1,13 +1,13 @@
 var characterSize = 50;
 var circles = []; //array of ScalingCircle objects
 var allTheKeys = "1234567890qwertyuiopasdfghjklzxcvbnm";
-var circleStartRadius = 100;
-var circleEndRadius = 200;
 
 function setup() {
   createCanvas(windowWidth,windowHeight); //make a fullscreen canvas, thanks to: http://codepen.io/grayfuse/pen/wKqLGL
   textSize(characterSize);
   colorMode(HSB, 100);// Use HSB with scale of 0-100, see https://p5js.org/reference/#/p5/color
+  ellipseMode(RADIUS); //https://p5js.org/reference/#/p5/ellipseMode draw with a radius rather than a width
+
   for (var i=0; i < allTheKeys.length; i++) {
     circles.push(new ScalingCircle(allTheKeys[i]));
   }
@@ -36,8 +36,8 @@ function keyTyped(){
 
 function ScalingCircle(aKey){ //ScalingCircle object
   this.key = aKey;
-  this.startCircleRadius = 100;
-  this.endCircleRadius = 200;
+  this.startCircleRadius = 50;
+  this.endCircleRadius = 100;
   this.circleRadius = this.startCircleRadius; //start with the start
   this.scaleUpDuration = 0.5; //take half of a second to scale up
   this.scaleDownDelay = this.scaleUpDuration; //wait until the scale up is down to scale down
@@ -50,8 +50,8 @@ function ScalingCircle(aKey){ //ScalingCircle object
     var translatedX = this.position.x * windowWidth;
     var translatedY = this.position.y * windowHeight;
     fill(this.colour);
-    ellipse(translatedX, translatedY, this.circleRadius, this.circleRadius);
-  }; //don't forget to close your method!
+    ellipse(translatedX, translatedY, this.circleRadius); // https://p5js.org/reference/#/p5/ellipse and https://p5js.org/reference/#/p5/ellipseMode
+  };
 
   this.scaleUpAndThenDown = function(){
     //syntax for tweens is createTween(object property, end, duration, [delay], [easing])

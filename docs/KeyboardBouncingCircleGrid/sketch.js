@@ -5,6 +5,7 @@ function setup() {
   createCanvas(windowWidth,windowHeight); //make a fullscreen canvas, thanks to: http://codepen.io/grayfuse/pen/wKqLGL
   noStroke(); //no outlines, just filled shapes
   colorMode(HSB, 100);// Use HSB with scale of 0-100, see https://p5js.org/reference/#/p5/color
+  ellipseMode(RADIUS); //https://p5js.org/reference/#/p5/ellipseMode draw with a radius rather than a width
 
   for (var i=0; i < allTheKeys.length; i++) {
     bouncyCircles.push(new BouncyCircle(allTheKeys[i]));
@@ -35,7 +36,7 @@ function keyTyped(){
 function BouncyCircle(aKey){ //SpringyCircle object
   this.key = aKey;
   this.colour = color(random(100),50,100,50);; //random hue, saturation 50%, brightness 100%, alpha 50%
-  this.radius = 100;
+  this.radius = 50;
   this.position = createVector(-1,-1);
   this.position = getCanvasPositionFromKey(this.key);
 
@@ -57,7 +58,7 @@ function BouncyCircle(aKey){ //SpringyCircle object
     var translatedX = this.position.x * windowWidth;
     var translatedY = this.position.y * windowHeight;
     fill(this.colour);
-    ellipse(translatedX, translatedY, this.radius, this.radius);
+    ellipse(translatedX, translatedY, this.radius); // https://p5js.org/reference/#/p5/ellipse and https://p5js.org/reference/#/p5/ellipseMode
   }
 
   this.spring = function(){

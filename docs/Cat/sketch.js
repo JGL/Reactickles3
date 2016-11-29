@@ -16,14 +16,15 @@ function setup() {
 	drawingContext.shadowBlur = 10;
 	drawingContext.shadowColor = "red";
 	background(200);
+	ellipseMode(RADIUS); //https://p5js.org/reference/#/p5/ellipseMode draw with a radius rather than a width
 }
 
 function draw() {
 	background(200);
 	line(15, 25, 70, 90);
-	ellipse(x, height/2, 20, 20);
+	ellipse(x, height/2, 20, 20); // https://p5js.org/reference/#/p5/ellipse and https://p5js.org/reference/#/p5/ellipseMode
 	x = x + 1;
-	ellipse(width/2, height/2, 50, 50);
+	ellipse(width/2, height/2, 50, 50); // https://p5js.org/reference/#/p5/ellipse and https://p5js.org/reference/#/p5/ellipseMode
 	image(img, 0, 0);
 }
 

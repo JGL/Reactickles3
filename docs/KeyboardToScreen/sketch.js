@@ -4,18 +4,19 @@ var theKey = '!'; //non letter or numeral to start off with
 function setup() {
   createCanvas(windowWidth,windowHeight); //make a fullscreen canvas, thanks to: http://codepen.io/grayfuse/pen/wKqLGL
   textSize(characterSize);
+  ellipseMode(RADIUS); //https://p5js.org/reference/#/p5/ellipseMode draw with a radius rather than a width
 }
 
 function draw() {
 	background(255); //white background
 	var keyToCanvasPosition = getCanvasPositionFromKey(theKey); //the relative position is returned as a pair of floats, both 0..1
 	//draw a circle in the relative position
-	var circleRadius = 100;
+	var circleRadius = 50;
 	var translatedX = keyToCanvasPosition.x * windowWidth;
 	var translatedY = keyToCanvasPosition.y * windowHeight;
 	stroke('red'); //draw circle in red
 	fill('red'); //draw circle filled in red
-	ellipse(translatedX, translatedY, circleRadius, circleRadius);
+	ellipse(translatedX, translatedY, circleRadius); // https://p5js.org/reference/#/p5/ellipse and https://p5js.org/reference/#/p5/ellipseMode
 	//draw the character on top too, in blue
 	stroke('blue');
 	fill('blue');

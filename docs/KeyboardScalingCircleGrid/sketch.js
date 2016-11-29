@@ -6,6 +6,7 @@ function setup() {
   createCanvas(windowWidth,windowHeight); //make a fullscreen canvas, thanks to: http://codepen.io/grayfuse/pen/wKqLGL
   textSize(characterSize);
   colorMode(HSB, 100);// Use HSB with scale of 0-100, see https://p5js.org/reference/#/p5/color
+  ellipseMode(RADIUS); //https://p5js.org/reference/#/p5/ellipseMode draw with a radius rather than a width
   for (var i=0; i < allTheKeys.length; i++) {
     circles.push(new ScalingCircle(allTheKeys[i]));
   }
@@ -32,8 +33,8 @@ function keyTyped(){
 
 function ScalingCircle(aKey){ //ScalingCircle object
   this.key = aKey;
-  this.circleBigRadius = 300;
-  this.circleSmallRadius = 100;
+  this.circleBigRadius = 150;
+  this.circleSmallRadius = 50;
   this.circleRadius = this.circleSmallRadius;
   this.position = createVector(-1,-1);
   this.position = getCanvasPositionFromKey(aKey);
@@ -51,7 +52,7 @@ function ScalingCircle(aKey){ //ScalingCircle object
     var translatedX = this.position.x * windowWidth;
     var translatedY = this.position.y * windowHeight;
     fill(this.colour);
-    ellipse(translatedX, translatedY, this.circleRadius, this.circleRadius);
+    ellipse(translatedX, translatedY, this.circleRadius); // https://p5js.org/reference/#/p5/ellipse
   }; //don't forget to close your method!
 
   this.scale = function(){

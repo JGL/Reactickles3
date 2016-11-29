@@ -6,12 +6,13 @@ function setup() {
   createCanvas(windowWidth,windowHeight); //make a fullscreen canvas, thanks to: http://codepen.io/grayfuse/pen/wKqLGL
   noStroke(); //no outlines, just filled shapes
   colorMode(HSB, 100);// Use HSB with scale of 0-100, see https://p5js.org/reference/#/p5/color
+  ellipseMode(RADIUS); //https://p5js.org/reference/#/p5/ellipseMode draw with a radius rather than a width
   var segmentColourMaxBrightness = 100;
   var segmentColourMinBrightness = 80;
   var segmentColourBrightnessRatio = (segmentColourMaxBrightness-segmentColourMinBrightness)/wormLength;
   var segmentColour = color(random(100),50,segmentColourMaxBrightness, 100); //random hue, saturation 50%, brightness 100%, alpha 100%
-  var segmentMaxRadius = 100;
-  var segmentMinRadius = 70;
+  var segmentMaxRadius = 50;
+  var segmentMinRadius = 35;
   var segmentRadiusRatio = (segmentMaxRadius-segmentMinRadius)/wormLength;
   var segmentRadius = segmentMaxRadius;
 
@@ -83,7 +84,7 @@ function WormSegment(aColour,aRadius){ //WormSegment object
     var translatedX = this.position.x * windowWidth;
     var translatedY = this.position.y * windowHeight;
     fill(this.colour);
-    ellipse(translatedX, translatedY, this.radius, this.radius);
+    ellipse(translatedX, translatedY, this.radius); // https://p5js.org/reference/#/p5/ellipse and https://p5js.org/reference/#/p5/ellipseMode
   }
 }
 
