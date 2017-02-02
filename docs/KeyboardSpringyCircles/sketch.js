@@ -1,9 +1,8 @@
 var springyCircles = []; //array of SpringyCircle objects
-var numberOfSpringyCircles = 10;
+var numberOfSpringyCircles = 100;
 var allTheKeys = "1234567890qwertyuiopasdfghjklzxcvbnm";
 var circleMinRadius = 50;
 var circleMaxRadius = 100;
-var sel; //a dropdown menu <select></select> element in the DOM.
 
 function setup() {
   createCanvas(windowWidth,windowHeight); //make a fullscreen canvas, thanks to: http://codepen.io/grayfuse/pen/wKqLGL
@@ -14,19 +13,6 @@ function setup() {
   for (var i=0; i < numberOfSpringyCircles; i++) {
     springyCircles.push(new SpringyCircle());
   }
-
-  selectLabel = createDiv('Select an easing function:');
-  selectLabel.position(10, 10);
-
-  textAlign(CENTER);
-  sel = createSelect();
-  sel.position(10, 30);
-  sel.option('easeOutBounce');
-  sel.option('easeOutBack');
-  sel.option('elastic');
-  sel.option('swingTo');
-  sel.option('bounce');
-  sel.option('bouncePast');
 }
 
 function draw() {
@@ -56,7 +42,7 @@ function keyTyped(){
 
       if(distanceBetweenKeyAndCircle < radiusOfCircle){
         //if the key is under the springy circle, then spring/move it
-        springyCircles[i].startEase();
+        springyCircles[i].moveCircle();
       }
 
     }
@@ -66,58 +52,39 @@ function keyTyped(){
 }
 
 function SpringyCircle(){ //SpringyCircle object
+  //converted from Processing.js http://processingjs.org/learning/topic/springs/
   this.colour = color(random(100),50,100,50);; //random hue, saturation 50%, brightness 100%, alpha 50%
   this.radius = random(circleMinRadius,circleMaxRadius);
-  this.position = createVector(random(windowWidth)/windowWidth,random(windowHeight)/windowHeight);
-  this.startPosition = createVector(this.position.x, this.position.y);
-  this.startPosition.y += 0.15; //want to start 15% of the screen down when the circle is interacted with
-  this.durationOfEase = 1000; //1000 milliseconds for easing
-  this.endPosition = createVector(this.position.x, this.position.y); //want to finish back where we started
-  this.startTimeOfEase = -1;
+  this.mass = this.radius/10.0;
+  this.springConstant = 0.5; //aka "k" in Hookes law https://en.wikipedia.org/wiki/Hooke's_law
+  this.damping = 0.9;
+  this.restPosition = createVector(random(windowWidth)/windowWidth,random(windowHeight)/windowHeight);
+  this.position = createVector(this.restPosition.x, this.restPosition.y);
+  this.velocity = createVector(0,0);
+  this.acceleration = createVector(0,0);
+  this.force = createVector(0,0);
 
   this.display = function(){
-    var milliseconds = millis();
-    var elapsedMillisSinceStartOfEase = milliseconds - this.startTimeOfEase;
-    if(this.startTimeOfEase > 0 && elapsedMillisSinceStartOfEase < this.durationOfEase){
-      var changeBetweenStartAndEnd = this.endPosition.y - this.startPosition.y;
-      var ratioOfEaseComplete = elapsedMillisSinceStartOfEase/this.durationOfEase;
-      var changeUpToNow = 0;
-      var easeOption = sel.value();
+    // can't do these things below, need to call dedicated static p5.vector methods, see: https://p5js.org/reference/#/p5.Vector
+    // this.force = -this.springConstant * (this.position-this.restPosition); // f=-ky
+    // this.acceleration = this.force/this.mass; // Set the acceleration, f=ma == a=f/m
+    // this.velocity = this.damping * (this.velocity+this.acceleration);
+    // this.position += this.velocity;
+    this.force = p5.Vector.mult(p5.Vector.sub(this.position,this.restPosition),-this.springConstant); // f=-ky
+    this.acceleration = p5.Vector.div(this.force,this.mass); // Set the acceleration, f=ma == a=f/m
+    this.velocity = p5.Vector.mult(p5.Vector.add(this.velocity, this.acceleration),this.damping);
+    this.position.add(this.velocity);
 
-      switch(easeOption){
-        case 'easeOutBounce':
-          changeUpToNow = changeBetweenStartAndEnd*easeOutBounce(ratioOfEaseComplete);
-          break;
-        case 'easeOutBack':
-          changeUpToNow = changeBetweenStartAndEnd*easeOutBack(ratioOfEaseComplete);
-          break;
-        case 'elastic':
-          changeUpToNow = changeBetweenStartAndEnd*elastic(ratioOfEaseComplete);
-          break;
-        case 'swingTo':
-          changeUpToNow = changeBetweenStartAndEnd*swingTo(ratioOfEaseComplete);
-          break;
-        case 'bounce':
-          changeUpToNow = changeBetweenStartAndEnd*bounce(ratioOfEaseComplete);
-          break;
-        case 'bouncePast':
-          changeUpToNow = changeBetweenStartAndEnd*bouncePast(ratioOfEaseComplete);
-          break;
-        default:
-          changeUpToNow = changeBetweenStartAndEnd*bouncePast(ratioOfEaseComplete);
-          break;
-      }
-
-      this.position.y = this.startPosition.y + changeUpToNow;
-    }
     var translatedX = this.position.x * windowWidth;
     var translatedY = this.position.y * windowHeight;
     fill(this.colour);
     ellipse(translatedX, translatedY, this.radius); // https://p5js.org/reference/#/p5/ellipse and https://p5js.org/reference/#/p5/ellipseMode
   }
 
-  this.startEase = function(){ //move the position of the spring a bit
-    print("Starting an Ease");
-    this.startTimeOfEase = millis();
+  this.moveCircle = function(){ //move the position of the spring a bit
+    var randomOffset = createVector(random(-0.1,0.1), random(-0.1,0.1));
+    //this.position += randomOffset; += doesn't work!
+    this.position.add(randomOffset); //see https://p5js.org/examples/hello-p5-flocking.html for more p5.vector fun
+    // and http://p5js.org/reference/#/p5.Vector
   }
 }
