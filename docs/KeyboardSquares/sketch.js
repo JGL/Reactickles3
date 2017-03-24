@@ -1,20 +1,15 @@
 var bouncySquares = []; //array of BouncySquare objects
+var numberOfSquaresHorizontally = 5;
+var numberOfSquaresVertically = 5;
+var randomColour;
 
 function setup() {
   createCanvas(windowWidth,windowHeight); //make a fullscreen canvas, thanks to: http://codepen.io/grayfuse/pen/wKqLGL
   noStroke(); //no outlines, just filled shapes
   colorMode(HSB, 100);// Use HSB with scale of 0-100, see https://p5js.org/reference/#/p5/color
   rectMode(CENTER); // draw rects from their centres... https://p5js.org/reference/#/p5/rectMode
-
-  var numberOfSquaresHorizontally = 5;
-  var numberOfSquaresVertically = 5;
-  var initialColour = color(random(100),50,100,50); //random hue, saturation 50%, brightness 100%, alpha 50%
-
-  for (var j = 0; j < numberOfSquaresVertically; j++) {
-    for (var i = 0; i < numberOfSquaresHorizontally; i++) {
-      bouncySquares.push(new BouncySquare(i,j, numberOfSquaresHorizontally, numberOfSquaresVertically, initialColour));
-    }
-  }
+  pickRandomColour();
+  createSquares();
 }
 
 function draw() {
@@ -30,13 +25,31 @@ function drawSquares(){
 
 function keyTyped(){
   var lowerCaseKey = key.toLowerCase(); //key is a system variable via https://p5js.org/reference/#/p5/key
-  var randomColour = color(random(100),50,100,50); //random hue, saturation 50%, brightness 100%, alpha 50%
+  pickRandomColour();
 
   for (var i=0; i<bouncySquares.length; i++) {
     bouncySquares[i].move();
     bouncySquares[i].colour = randomColour;
   }
   return false; //https://p5js.org/reference/#/p5/keyTyped preventing default behaviour
+}
+
+function createSquares(){
+  for (var j = 0; j < numberOfSquaresVertically; j++) {
+    for (var i = 0; i < numberOfSquaresHorizontally; i++) {
+      bouncySquares.push(new BouncySquare(i,j, numberOfSquaresHorizontally, numberOfSquaresVertically, randomColour));
+    }
+  }
+}
+
+function windowResized() { //https://p5js.org/reference/#/p5/windowResized
+  resizeCanvas(windowWidth, windowHeight);
+  bouncySquares.splice(0,bouncySquares.length) //http://stackoverflow.com/questions/1232040/how-do-i-empty-an-array-in-javascript
+  createSquares();
+}
+
+function pickRandomColour(){
+  randomColour = color(random(100),50,100,50); //random hue, saturation 50%, brightness 100%, alpha 50%
 }
 
 function BouncySquare(anXIndex, aYIndex, aNumberOfSquaresHorizontally, aNumberOfSquaresVertically, startColour){
@@ -53,7 +66,7 @@ function BouncySquare(anXIndex, aYIndex, aNumberOfSquaresHorizontally, aNumberOf
   var scaledXSize = this.size/windowWidth;
   var scaledYSize = this.size/windowHeight;
   this.position.x = 0.5 - ((scaledXSize*this.numberOfSquaresHorizontally)/2.0) + (scaledXSize*this.xIndex);
-  this.position.y = 0.5 - ((scaledYSize*this.numberOfSquaresVertically)/2.0) + (scaledYSize*this.yIndex); //making sure everything is centred, using winow width for y in order to get a square
+  this.position.y = 0.5 - ((scaledYSize*this.numberOfSquaresVertically)/2.0) + (scaledYSize*this.yIndex); //making sure everything is centred
   this.restPosition = createVector(this.position.x, this.position.y);
   this.velocity = createVector(0,0);
   this.acceleration = createVector(0,0);
