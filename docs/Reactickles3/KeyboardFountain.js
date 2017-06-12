@@ -118,8 +118,7 @@ function KeyboardFountain(){
   }
 
  this.drawCircles = function(){
-    stroke(255);
-    strokeWeight(1);
+    noStroke();
 
     for (var i = 0; i < circles.length; i++) {
       var circle = circles[i].matterCircle;
