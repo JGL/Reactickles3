@@ -8,6 +8,10 @@ function KeyboardBouncingCircleGrid(){
     colorMode(HSB, 100);// Use HSB with scale of 0-100, see https://p5js.org/reference/#/p5/color
     ellipseMode(RADIUS); //https://p5js.org/reference/#/p5/ellipseMode draw with a radius rather than a width
 
+    while(bouncyCircles.length > 0) { // https://stackoverflow.com/questions/1232040/how-do-i-empty-an-array-in-javascript
+      bouncyCircles.pop();
+    }
+
     for (var i=0; i < allTheKeys.length; i++) {
       bouncyCircles.push(new BouncyCircle(allTheKeys[i]));
     }

@@ -8,6 +8,9 @@ function KeyboardScalingCircleGrid(){
     textSize(characterSize);
     colorMode(HSB, 100);// Use HSB with scale of 0-100, see https://p5js.org/reference/#/p5/color
     ellipseMode(RADIUS); //https://p5js.org/reference/#/p5/ellipseMode draw with a radius rather than a width
+    while(circles.length > 0) { // via https://stackoverflow.com/questions/1232040/how-do-i-empty-an-array-in-javascript
+      circles.pop();
+    }
     for (var i=0; i < allTheKeys.length; i++) {
       circles.push(new ScalingCircle(allTheKeys[i]));
     }

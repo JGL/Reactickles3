@@ -10,10 +10,14 @@ function KeyboardSquares(){
     colorMode(HSB, 100);// Use HSB with scale of 0-100, see https://p5js.org/reference/#/p5/color
     rectMode(CENTER); // draw rects from their centres... https://p5js.org/reference/#/p5/rectMode
     this.pickRandomColour();
+    while(bouncySquares.length > 0) { // https://stackoverflow.com/questions/1232040/how-do-i-empty-an-array-in-javascript
+      bouncySquares.pop();
+    }
     this.createSquares();
   }
 
   this.draw = function(){
+    rectMode(CENTER); // draw rects from their centres... https://p5js.org/reference/#/p5/rectMode
     background(255); //white background
     this.drawSquares();
   }

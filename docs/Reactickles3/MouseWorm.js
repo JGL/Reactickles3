@@ -1,5 +1,5 @@
 function MouseWorm(){
-var worm = []; //array of WormSegment objects
+  var worm = []; //array of WormSegment objects
   var wormLength = 30; //number of segments of the worm
 
   this.setup = function(){
@@ -16,6 +16,9 @@ var worm = []; //array of WormSegment objects
     var segmentRadiusRatio = (segmentMaxRadius-segmentMinRadius)/wormLength;
     var segmentRadius = segmentMaxRadius;
 
+    while(worm.length > 0) { // https://stackoverflow.com/questions/1232040/how-do-i-empty-an-array-in-javascript
+      worm.pop();
+    }
     for (var i=0; i < wormLength; i++) {
       worm.push(new WormSegment(segmentColour, segmentRadius));
       segmentRadius -= segmentRadiusRatio;

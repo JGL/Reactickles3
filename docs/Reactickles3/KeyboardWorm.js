@@ -17,6 +17,9 @@ function KeyboardWorm(){
     var segmentRadiusRatio = (segmentMaxRadius-segmentMinRadius)/wormLength;
     var segmentRadius = segmentMaxRadius;
 
+    while(worm.length > 0) { // https://stackoverflow.com/questions/1232040/how-do-i-empty-an-array-in-javascript
+      worm.pop();
+    }
     for (var i=0; i < wormLength; i++) {
       worm.push(new WormSegment(segmentColour, segmentRadius));
       segmentRadius -= segmentRadiusRatio;

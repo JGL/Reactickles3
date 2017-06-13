@@ -59,6 +59,7 @@ function KeyboardFountain(){
 
   this.draw = function(){
     background(255); //white background
+    rectMode(CENTER); // draw rects from their centres... https://p5js.org/reference/#/p5/rectMode
     this.moveFountain();
     this.drawFountain();
     this.drawCircles();

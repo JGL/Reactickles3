@@ -20,6 +20,7 @@ function setup() {
   createCanvas(windowWidth,windowHeight); //make a fullscreen canvas, thanks to: http://codepen.io/grayfuse/pen/wKqLGL
   textSize(characterSize);
   colorMode(HSB, 100);// Use HSB with scale of 0-100, see https://p5js.org/reference/#/p5/color
+  rectMode(CORNER);
 
   theKeyBoardScalingCircleGrid = new KeyboardScalingCircleGrid();
   theKeyboardWorm = new KeyboardWorm();
@@ -33,39 +34,39 @@ function setup() {
   var theButtonDimensions = createVector(100,100);
 
   var theKeyboardScalingCircleGridButtonPosition = createVector(100, 200);
-  var theKeyboardScalingCircleGridButton = new ReactickleButton("KeyboardScalingCircleGrid", theKeyBoardScalingCircleGrid, theKeyboardScalingCircleGridButtonPosition, theButtonDimensions);
+  var theKeyboardScalingCircleGridButton = new ReactickleButton("Keyboard Scaling Circle Grid", theKeyBoardScalingCircleGrid, theKeyboardScalingCircleGridButtonPosition, theButtonDimensions);
   buttons.push(theKeyboardScalingCircleGridButton);
 
   var theKeyboardWormButtonPosition = createVector(200, 200);
-  var theKeyboardWormButton = new ReactickleButton("KeyboardWorm", theKeyboardWorm, theKeyboardWormButtonPosition, theButtonDimensions);
+  var theKeyboardWormButton = new ReactickleButton("Keyboard Worm", theKeyboardWorm, theKeyboardWormButtonPosition, theButtonDimensions);
   buttons.push(theKeyboardWormButton);
 
   var theMouseWormButtonPosition = createVector(300, 200);
-  var theMouseWormButton = new ReactickleButton("MouseWorm", theMouseWorm, theMouseWormButtonPosition, theButtonDimensions);
+  var theMouseWormButton = new ReactickleButton("Mouse Worm", theMouseWorm, theMouseWormButtonPosition, theButtonDimensions);
   buttons.push(theMouseWormButton);
 
   var theKeyboardSpringyCirclesPosition = createVector(400, 200);
-  var theKeyboardSpringyCirclesButton = new ReactickleButton("KeyboardSpringyCircles", theKeyboardSpringyCircles, theKeyboardSpringyCirclesPosition, theButtonDimensions);
+  var theKeyboardSpringyCirclesButton = new ReactickleButton("Keyboard Springy Circles", theKeyboardSpringyCircles, theKeyboardSpringyCirclesPosition, theButtonDimensions);
   buttons.push(theKeyboardSpringyCirclesButton);
 
   var theMouseSpringyCirclesPosition = createVector(500, 200);
-  var theMouseSpringyCirclesButton = new ReactickleButton("MouseSpringyCircles", theMouseSpringyCircles, theMouseSpringyCirclesPosition, theButtonDimensions);
+  var theMouseSpringyCirclesButton = new ReactickleButton("Mouse Springy Circles", theMouseSpringyCircles, theMouseSpringyCirclesPosition, theButtonDimensions);
   buttons.push(theMouseSpringyCirclesButton);
 
   var theKeyboardBouncingCircleGridPosition = createVector(600, 200);
-  var theKeyboardBouncingCircleGridButton = new ReactickleButton("KeyboardBouncingCircleGrid", theKeyboardBouncingCircleGrid, theKeyboardBouncingCircleGridPosition, theButtonDimensions);
+  var theKeyboardBouncingCircleGridButton = new ReactickleButton("Keyboard Bouncing Circle Grid", theKeyboardBouncingCircleGrid, theKeyboardBouncingCircleGridPosition, theButtonDimensions);
   buttons.push(theKeyboardBouncingCircleGridButton);
 
   var theKeyboardSquaresPosition = createVector(700, 200);
-  var theKeyboardSquaresButton = new ReactickleButton("KeyboardSquares", theKeyboardSquares, theKeyboardSquaresPosition, theButtonDimensions);
+  var theKeyboardSquaresButton = new ReactickleButton("Keyboard Squares", theKeyboardSquares, theKeyboardSquaresPosition, theButtonDimensions);
   buttons.push(theKeyboardSquaresButton);
 
   var theKeyboardFountainPosition = createVector(800, 200);
-  var theKeyboardFountainButton = new ReactickleButton("KeyboardFountain", theKeyboardFountain, theKeyboardFountainPosition, theButtonDimensions);
+  var theKeyboardFountainButton = new ReactickleButton("Keyboard Fountain", theKeyboardFountain, theKeyboardFountainPosition, theButtonDimensions);
   buttons.push(theKeyboardFountainButton);
 
   var theReturnToMenuButtonPosition = createVector(0, windowHeight-theButtonDimensions.y); //0, height-theButtonDimensions.y so that it's in the bottom left corner
-  theReturnToMenuButton = new ReturnToMenuButton("Click to return to Main Menu", theReturnToMenuButtonPosition ,theButtonDimensions);
+  theReturnToMenuButton = new ReturnToMenuButton(theReturnToMenuButtonPosition ,theButtonDimensions);
 }
 
 function draw() {
@@ -82,6 +83,7 @@ function draw() {
 
   if(reactickleScreen){
     theReactickle.draw();
+    rectMode(CORNER); // making sure the button is drawn correctly
     theReturnToMenuButton.draw();
   }
 }
@@ -109,6 +111,7 @@ function mouseReleased(){
         reactickleScreen = true; //set reactickleScreen to true as we want to display a reactickle now
         theReactickle = buttons[i].reactickleToRun; //get the reactickle to run from the button itself
         theReactickle.setup(); //set it up!
+        theReturnToMenuButton.updateButtonText(buttons[i].title); //update the button to have the reactickle name in it too
         break;
       }
     }
@@ -137,17 +140,13 @@ function ReactickleButton(title, reactickleToRun, position, dimensions){
   this.backgroundColour = color('rgba(0,0,0,0.5)');
   this.textColour = color('rgb(255,0,0)');
 
-  this.setup = function(){
-
-  }
-
   this.draw = function(){
     textSize(characterSize);
     noStroke();
     fill(this.backgroundColour);
     rect(this.position.x, this.position.y, this.dimensions.x, this.dimensions.y);
     fill(this.textColour);
-    text(title, this.position.x+5, this.position.y+20);
+    text(title, this.position.x+5, this.position.y+20, this.dimensions.x-5, this.dimensions.y-20);
   }
 
   this.checkIfMouseOverButton = function(aMouseX, aMouseY){
@@ -164,16 +163,12 @@ function ReactickleButton(title, reactickleToRun, position, dimensions){
   }
 }
 
-function ReturnToMenuButton(title, position, dimensions){
-  this.title = title;
+function ReturnToMenuButton(position, dimensions){
+  this.title = "Click to return to Main Menu";
   this.position = position;
   this.dimensions = dimensions;
   this.backgroundColour = color('rgba(0,0,0,0.5)');
   this.textColour = color('rgb(255,0,0)');
-
-  this.setup = function(){
-
-  }
 
   this.draw = function(){
     textSize(characterSize);
@@ -181,7 +176,7 @@ function ReturnToMenuButton(title, position, dimensions){
     fill(this.backgroundColour);
     rect(this.position.x, this.position.y, this.dimensions.x, this.dimensions.y);
     fill(this.textColour);
-    text(title, this.position.x+5, this.position.y+20);
+    text(this.title, this.position.x+5, this.position.y+20, this.dimensions.x-5, this.dimensions.y-20); //https://p5js.org/reference/#/p5/text
   }
 
   this.checkIfMouseOverButton = function(aMouseX, aMouseY){
@@ -195,5 +190,9 @@ function ReturnToMenuButton(title, position, dimensions){
     }
 
     return mouseIsOver;
+  }
+
+  this.updateButtonText = function(textToAdd){
+    this.title = textToAdd+"\nClick to return to Main Menu";
   }
 }
