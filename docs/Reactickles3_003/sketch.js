@@ -1,4 +1,4 @@
-var characterSize = 24;
+var characterSize = 12;
 var theKeyboardScalingCircleGrid;
 var theKeyboardWorm;
 var theMouseWorm;
@@ -27,10 +27,6 @@ var videoThumbnailOfKeyboardFountain;
 
 var videoThumbnails = [];
 
-var openDyslexicFont;
-
-var strokeSize = 4;
-
 function preload(){
   //preload all the video icons
   videoThumbnailOfKeyboardScalingCircleGrid = createVideo(["mov/KeyboardScalingCircleGrid.mov"]);
@@ -57,8 +53,6 @@ function preload(){
   videoThumbnailOfKeyboardFountain = createVideo(["mov/KeyboardFountain.mov"]);
   videoThumbnailOfKeyboardFountain.hide();
   videoThumbnails.push(videoThumbnailOfKeyboardFountain);
-
-  openDyslexicFont = loadFont("ttf/OpenDyslexic3-Regular.ttf");
 }
 
 function setup() {
@@ -111,15 +105,10 @@ function setup() {
   var theMouseSpringyCirclesButton = new ReactickleButton("Mouse Springy Circles", theMouseSpringyCircles, theMouseSpringyCirclesPosition, theButtonDimensions, videoThumbnailOfMouseSpringyCircles);
   buttons.push(theMouseSpringyCirclesButton);
 
-  var theReactickleTitlePosition = createVector(0,0);
-  theReactickleTitle = new ReactickleTitle(theReactickleTitlePosition, theButtonDimensions);
-
-  var theReturnToMenuButtonPosition = createVector(0, windowHeight-theButtonDimensions.y);
-  theReturnToMenuButton = new ReturnToMenuButton(theReturnToMenuButtonPosition,theButtonDimensions);
+  var theReturnToMenuButtonPosition = createVector(0, windowHeight-theButtonDimensions.y); //0, height-theButtonDimensions.y so that it's in the bottom left corner
+  theReturnToMenuButton = new ReturnToMenuButton(theReturnToMenuButtonPosition ,theButtonDimensions);
 
   playAndLoopAllVideos();
-
-  strokeWeight(strokeSize);
 }
 
 function draw() {
@@ -127,12 +116,7 @@ function draw() {
     background(255); //white background
     noStroke();
 
-    fill(0);
-    textFont(openDyslexicFont);
-    textSize(48);
-    text('Welome to Reactickles3', 100, 120);
-    textSize(24);
-    text("Please choose a Reactickle below:", 100, 180);
+    text("Please click on a Reactickle to start it", 100, 100);
 
     for(var i=0; i<buttons.length; i++){
       buttons[i].draw();
@@ -141,8 +125,7 @@ function draw() {
 
   if(reactickleScreen){
     theReactickle.draw();
-    rectMode(CORNER); // making sure the buttons are drawn correctly
-    theReactickleTitle.draw();
+    rectMode(CORNER); // making sure the button is drawn correctly
     theReturnToMenuButton.draw();
   }
 }
@@ -161,30 +144,16 @@ function touchMoved(){
   return false; //https://p5js.org/reference/#/p5/touchMoved
 }
 
-function mouseMoved(){
-  if(!mouseIsPressed && menuScreen){
-    //then the mouse is just moving around, so highlight the mouseOvered button
-    for(var i=0; i<buttons.length; i+= 1){
-      if(buttons[i].checkIfMouseOverButton(mouseX, mouseY)){//is the mouse over the button in question?
-        buttons[i].highlit = true; //get the reactickle to run from the button itself
-      }else{
-        buttons[i].highlit = false;
-      }
-    }
-  }
-}
-
 function mouseReleased(){
   if(menuScreen){
     for(var i=0; i<buttons.length; i+= 1){
-
       if(buttons[i].checkIfMouseOverButton(mouseX, mouseY)){//is the mouse over the button in question?
         //if so, we aren't on the menuScreen any more, we are running a Reactickle
         menuScreen = false; //set menuScreen to false as we aren't on the menu any more
         reactickleScreen = true; //set reactickleScreen to true as we want to display a reactickle now
         theReactickle = buttons[i].reactickleToRun; //get the reactickle to run from the button itself
         theReactickle.setup(); //set it up!
-        theReactickleTitle.updateButtonText(buttons[i].title); //update the button to have the reactickle name in it too
+        theReturnToMenuButton.updateButtonText(buttons[i].title); //update the button to have the reactickle name in it too
         stopAllVideos(); //no point playing the thumbnails if we can't see them
         break;
       }
@@ -224,17 +193,18 @@ function ReactickleButton(title, reactickleToRun, position, dimensions, videoThu
   this.reactickleToRun = reactickleToRun;
   this.position = position;
   this.dimensions = dimensions;
-  this.highlightColour = color('rgb(255,0,0)');
+  this.backgroundColour = color('rgba(0,0,0,0.5)');
+  this.textColour = color('rgb(255,0,0)');
   this.videoThumbnail = videoThumbnail;
-  this.highlit = false;
 
   this.draw = function(){
+    // textSize(characterSize);
+    // noStroke();
+    // fill(this.backgroundColour);
+    // rect(this.position.x, this.position.y, this.dimensions.x, this.dimensions.y);
+    // fill(this.textColour);
+    // text(title, this.position.x+5, this.position.y+20, this.dimensions.x-5, this.dimensions.y-20);
     image(this.videoThumbnail, this.position.x, this.position.y, this.dimensions.x, this.dimensions.y);
-    if(this.highlit){
-      stroke(this.highlightColour);
-      noFill();
-      rect(this.position.x, this.position.y, this.dimensions.x-(strokeSize/2), this.dimensions.y);
-    }
   }
 
   this.checkIfMouseOverButton = function(aMouseX, aMouseY){
@@ -252,11 +222,11 @@ function ReactickleButton(title, reactickleToRun, position, dimensions, videoThu
 }
 
 function ReturnToMenuButton(position, dimensions){
-  this.title = "Back to Menu";
+  this.title = "Click to return to Main Menu";
   this.position = position;
   this.dimensions = dimensions;
   this.backgroundColour = color('rgba(0,0,0,0.5)');
-  this.textColour = color('rgb(255,255,255)');
+  this.textColour = color('rgb(255,0,0)');
 
   this.draw = function(){
     textSize(characterSize);
@@ -279,25 +249,8 @@ function ReturnToMenuButton(position, dimensions){
 
     return mouseIsOver;
   }
-}
-
-function ReactickleTitle(position, dimensions){
-  this.title = "A Reactickle";
-  this.position = position;
-  this.dimensions = dimensions;
-  this.backgroundColour = color('rgba(0,0,0,0.5)');
-  this.textColour = color('rgb(255,255,255)');
-
-  this.draw = function(){
-    textSize(characterSize);
-    noStroke();
-    fill(this.backgroundColour);
-    rect(this.position.x, this.position.y, this.dimensions.x, this.dimensions.y);
-    fill(this.textColour);
-    text(this.title, this.position.x+5, this.position.y+20, this.dimensions.x-5, this.dimensions.y-20); //https://p5js.org/reference/#/p5/text
-  }
 
   this.updateButtonText = function(textToAdd){
-    this.title = textToAdd;
+    this.title = textToAdd+"\nClick to return to Main Menu";
   }
 }
