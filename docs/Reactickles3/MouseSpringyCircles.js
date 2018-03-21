@@ -1,6 +1,6 @@
 function MouseSpringyCircles(){
   var springyCircles = []; //array of SpringyCircle objects
-  var numberOfSpringyCircles = 100;
+  var numberOfSpringyCircles = 20;
   var allTheKeys = "1234567890qwertyuiopasdfghjklzxcvbnm";
 
   this.setup = function(){

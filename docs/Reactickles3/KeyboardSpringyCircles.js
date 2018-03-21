@@ -1,6 +1,6 @@
 function KeyboardSpringyCircles(){
   var springyCircles = []; //array of SpringyCircle objects
-  var numberOfSpringyCircles = 100;
+  var numberOfSpringyCircles = 20;
   var allTheKeys = "1234567890qwertyuiopasdfghjklzxcvbnm";
   var circleMinRadius = 50;
   var circleMaxRadius = 100;
