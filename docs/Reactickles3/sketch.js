@@ -132,9 +132,9 @@ function draw() {
     fill(0);
     textFont(reactickles3Font);
     textSize(48);
-    text('Welome to Reactickles3', 100, 120);
+    text('Welcome to ReacTickles3', 100, 120);
     textSize(24);
-    text("Please choose a Reactickle below:", 100, 180);
+    text("Please choose a ReacTickle below:", 100, 180);
 
     strokeWeight(strokeSize);
     for(var i=0; i<buttons.length; i++){
