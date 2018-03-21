@@ -29,7 +29,9 @@ var videoThumbnails = [];
 
 var reactickles3Font;
 
-var strokeSize = 4;
+var strokeSize = 4; //draw a pixel border of this size around buttons in the menu
+
+var textOffsetFromSideOfScreen = 10; //offset the text in the actual Reactickle screen by this amount
 
 function preload(){
   //preload all the video icons
@@ -134,6 +136,7 @@ function draw() {
     textSize(24);
     text("Please choose a Reactickle below:", 100, 180);
 
+    strokeWeight(strokeSize);
     for(var i=0; i<buttons.length; i++){
       buttons[i].draw();
     }
@@ -264,7 +267,7 @@ function ReturnToMenuButton(position, dimensions){
     fill(this.backgroundColour);
     rect(this.position.x, this.position.y, this.dimensions.x, this.dimensions.y);
     fill(this.textColour);
-    text(this.title, this.position.x+5, this.position.y+20, this.dimensions.x-5, this.dimensions.y-20); //https://p5js.org/reference/#/p5/text
+    text(this.title, this.position.x+textOffsetFromSideOfScreen, this.position.y+20, this.dimensions.x-textOffsetFromSideOfScreen, this.dimensions.y-20); //https://p5js.org/reference/#/p5/text
   }
 
   this.checkIfMouseOverButton = function(aMouseX, aMouseY){
@@ -294,7 +297,7 @@ function ReactickleTitle(position, dimensions){
     fill(this.backgroundColour);
     rect(this.position.x, this.position.y, this.dimensions.x, this.dimensions.y);
     fill(this.textColour);
-    text(this.title, this.position.x+5, this.position.y+20, this.dimensions.x-5, this.dimensions.y-20); //https://p5js.org/reference/#/p5/text
+    text(this.title, this.position.x+textOffsetFromSideOfScreen, this.position.y+20, this.dimensions.x-textOffsetFromSideOfScreen, this.dimensions.y-20); //https://p5js.org/reference/#/p5/text
   }
 
   this.updateButtonText = function(textToAdd){
