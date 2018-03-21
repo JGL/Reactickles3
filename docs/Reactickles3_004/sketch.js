@@ -27,7 +27,7 @@ var videoThumbnailOfKeyboardFountain;
 
 var videoThumbnails = [];
 
-var reactickles3Font;
+var openDyslexicFont;
 
 var strokeSize = 4;
 
@@ -58,7 +58,7 @@ function preload(){
   videoThumbnailOfKeyboardFountain.hide();
   videoThumbnails.push(videoThumbnailOfKeyboardFountain);
 
-  reactickles3Font = loadFont("font/futura_book.otf");
+  openDyslexicFont = loadFont("ttf/OpenDyslexic3-Regular.ttf");
 }
 
 function setup() {
@@ -128,7 +128,7 @@ function draw() {
     noStroke();
 
     fill(0);
-    textFont(reactickles3Font);
+    textFont(openDyslexicFont);
     textSize(48);
     text('Welome to Reactickles3', 100, 120);
     textSize(24);
