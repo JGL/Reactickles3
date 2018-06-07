@@ -16,16 +16,16 @@ var buttons = []; //array of all the ReactickleButtons
 
 var theReturnToMenuButton;
 
-var videoThumbnailOfKeyboardScalingCircleGrid;
-var videoThumbnailOfKeyboardWorm;
-var videoThumbnailOfMouseWorm;
-var videoThumbnailOfKeyboardSpringyCircles;
-var videoThumbnailOfMouseSpringyCircles;
-var videoThumbnailOfKeyboardBouncingCircleGrid;
-var videoThumbnailOfKeyboardSquares;
-var videoThumbnailOfKeyboardFountain;
+var animationOfKeyboardScalingCircleGrid;
+var animationOfKeyboardWorm;
+var animationOfMouseWorm;
+var animationOfKeyboardSpringyCircles;
+var animationOfMouseSpringyCircles;
+var animationOfKeyboardBouncingCircleGrid;
+var animationOfKeyboardSquares;
+var animationOfKeyboardFountain;
 
-var videoThumbnails = [];
+var animations = [];
 
 var reactickles3Font;
 
@@ -35,30 +35,22 @@ var textOffsetFromSideOfScreen = 10; //offset the text in the actual Reactickle 
 
 function preload(){
   //preload all the video icons
-  videoThumbnailOfKeyboardScalingCircleGrid = createVideo(["mov/KeyboardScalingCircleGrid.mov"]);
-  videoThumbnailOfKeyboardScalingCircleGrid.hide(); //by default video shows up in separate dom element. hide it and draw it to the canvas instead
-  videoThumbnails.push(videoThumbnailOfKeyboardScalingCircleGrid);
-  videoThumbnailOfKeyboardWorm = createVideo(["mov/KeyboardWorm.mov"]);
-  videoThumbnailOfKeyboardWorm.hide();
-  videoThumbnails.push(videoThumbnailOfKeyboardWorm);
-  videoThumbnailOfMouseWorm = createVideo(["mov/MouseWorm.mov"]);
-  videoThumbnailOfMouseWorm.hide();
-  videoThumbnails.push(videoThumbnailOfMouseWorm);
-  videoThumbnailOfKeyboardSpringyCircles = createVideo(["mov/KeyboardSpringyCircles.mov"]);
-  videoThumbnailOfKeyboardSpringyCircles.hide();
-  videoThumbnails.push(videoThumbnailOfKeyboardSpringyCircles);
-  videoThumbnailOfMouseSpringyCircles = createVideo(["mov/MouseSpringyCircles.mov"]);
-  videoThumbnailOfMouseSpringyCircles.hide();
-  videoThumbnails.push(videoThumbnailOfMouseSpringyCircles);
-  videoThumbnailOfKeyboardBouncingCircleGrid = createVideo(["mov/KeyboardBouncingCircleGrid.mov"]);
-  videoThumbnailOfKeyboardBouncingCircleGrid.hide();
-  videoThumbnails.push(videoThumbnailOfKeyboardBouncingCircleGrid);
-  videoThumbnailOfKeyboardSquares = createVideo(["mov/KeyboardSquares.mov"]);
-  videoThumbnailOfKeyboardSquares.hide();
-  videoThumbnails.push(videoThumbnailOfKeyboardSquares);
-  videoThumbnailOfKeyboardFountain = createVideo(["mov/KeyboardFountain.mov"]);
-  videoThumbnailOfKeyboardFountain.hide();
-  videoThumbnails.push(videoThumbnailOfKeyboardFountain);
+  animationOfKeyboardScalingCircleGrid = loadAnimation("png/KeyboardScalingCircleGrid01.png", "png/KeyboardScalingCircleGrid88.png");
+  animations.push(animationOfKeyboardScalingCircleGrid);
+  animationOfKeyboardWorm = loadAnimation("png/KeyboardWorm01.png", "png/KeyboardWorm79.png");
+  animations.push(animationOfKeyboardWorm);
+  animationOfMouseWorm = loadAnimation("png/MouseWorm001.png", "png/MouseWorm102.png");
+  animations.push(animationOfMouseWorm);
+  animationOfKeyboardSpringyCircles = loadAnimation("png/KeyboardSpringyCircles001.png", "png/KeyboardSpringyCircles112.png");
+  animations.push(animationOfKeyboardSpringyCircles);
+  animationOfMouseSpringyCircles = loadAnimation("png/MouseSpringyCircles001.png", "png/MouseSpringyCircles140.png");
+  animations.push(animationOfMouseSpringyCircles);
+  animationOfKeyboardBouncingCircleGrid = loadAnimation("png/KeyboardBouncingCircleGrid01.png", "png/KeyboardBouncingCircleGrid98.png");
+  animations.push(animationOfKeyboardBouncingCircleGrid);
+  animationOfKeyboardSquares = loadAnimation("png/KeyboardSquares001.png", "png/KeyboardSquares210.png");
+  animations.push(animationOfKeyboardSquares);
+  animationOfKeyboardFountain = loadAnimation("png/KeyboardFountain001.png", "png/KeyboardFountain235.png");
+  animations.push(animationOfKeyboardFountain);
 
   reactickles3Font = loadFont("font/futura_book.otf");
 }
@@ -81,36 +73,36 @@ function setup() {
   var theButtonDimensions = createVector(128,128);
 
   var theKeyboardScalingCircleGridButtonPosition = createVector(100, 200);
-  var theKeyboardScalingCircleGridButton = new ReactickleButton("Keyboard Scaling Circle Grid", theKeyBoardScalingCircleGrid, theKeyboardScalingCircleGridButtonPosition, theButtonDimensions, videoThumbnailOfKeyboardScalingCircleGrid);
+  var theKeyboardScalingCircleGridButton = new ReactickleButton("Keyboard Scaling Circle Grid", theKeyBoardScalingCircleGrid, theKeyboardScalingCircleGridButtonPosition, theButtonDimensions, animationOfKeyboardScalingCircleGrid);
   buttons.push(theKeyboardScalingCircleGridButton);
 
   var theKeyboardWormButtonPosition = createVector(100+(theButtonDimensions.x * 1), 200);
-  var theKeyboardWormButton = new ReactickleButton("Keyboard Worm", theKeyboardWorm, theKeyboardWormButtonPosition, theButtonDimensions, videoThumbnailOfKeyboardWorm);
+  var theKeyboardWormButton = new ReactickleButton("Keyboard Worm", theKeyboardWorm, theKeyboardWormButtonPosition, theButtonDimensions, animationOfKeyboardWorm);
   buttons.push(theKeyboardWormButton);
 
   var theKeyboardSpringyCirclesPosition = createVector(100+(theButtonDimensions.x * 2), 200);
-  var theKeyboardSpringyCirclesButton = new ReactickleButton("Keyboard Springy Circles", theKeyboardSpringyCircles, theKeyboardSpringyCirclesPosition, theButtonDimensions, videoThumbnailOfKeyboardSpringyCircles);
+  var theKeyboardSpringyCirclesButton = new ReactickleButton("Keyboard Springy Circles", theKeyboardSpringyCircles, theKeyboardSpringyCirclesPosition, theButtonDimensions, animationOfKeyboardSpringyCircles);
   buttons.push(theKeyboardSpringyCirclesButton);
 
   var theKeyboardBouncingCircleGridPosition = createVector(100+(theButtonDimensions.x * 3), 200);
-  var theKeyboardBouncingCircleGridButton = new ReactickleButton("Keyboard Bouncing Circle Grid", theKeyboardBouncingCircleGrid, theKeyboardBouncingCircleGridPosition, theButtonDimensions, videoThumbnailOfKeyboardBouncingCircleGrid);
+  var theKeyboardBouncingCircleGridButton = new ReactickleButton("Keyboard Bouncing Circle Grid", theKeyboardBouncingCircleGrid, theKeyboardBouncingCircleGridPosition, theButtonDimensions, animationOfKeyboardBouncingCircleGrid);
   buttons.push(theKeyboardBouncingCircleGridButton);
 
   var theKeyboardSquaresPosition = createVector(100+(theButtonDimensions.x * 4), 200);
-  var theKeyboardSquaresButton = new ReactickleButton("Keyboard Squares", theKeyboardSquares, theKeyboardSquaresPosition, theButtonDimensions, videoThumbnailOfKeyboardSquares);
+  var theKeyboardSquaresButton = new ReactickleButton("Keyboard Squares", theKeyboardSquares, theKeyboardSquaresPosition, theButtonDimensions, animationOfKeyboardSquares);
   buttons.push(theKeyboardSquaresButton);
 
   var theKeyboardFountainPosition = createVector(100+(theButtonDimensions.x * 5), 200);
-  var theKeyboardFountainButton = new ReactickleButton("Keyboard Fountain", theKeyboardFountain, theKeyboardFountainPosition, theButtonDimensions, videoThumbnailOfKeyboardFountain);
+  var theKeyboardFountainButton = new ReactickleButton("Keyboard Fountain", theKeyboardFountain, theKeyboardFountainPosition, theButtonDimensions, animationOfKeyboardFountain);
   buttons.push(theKeyboardFountainButton);
 
   //separate row for mouse based interactions
   var theMouseWormButtonPosition = createVector(100, 400);
-  var theMouseWormButton = new ReactickleButton("Mouse Worm", theMouseWorm, theMouseWormButtonPosition, theButtonDimensions, videoThumbnailOfMouseWorm);
+  var theMouseWormButton = new ReactickleButton("Mouse Worm", theMouseWorm, theMouseWormButtonPosition, theButtonDimensions, animationOfMouseWorm);
   buttons.push(theMouseWormButton);
 
   var theMouseSpringyCirclesPosition = createVector(100+theButtonDimensions.x, 400);
-  var theMouseSpringyCirclesButton = new ReactickleButton("Mouse Springy Circles", theMouseSpringyCircles, theMouseSpringyCirclesPosition, theButtonDimensions, videoThumbnailOfMouseSpringyCircles);
+  var theMouseSpringyCirclesButton = new ReactickleButton("Mouse Springy Circles", theMouseSpringyCircles, theMouseSpringyCirclesPosition, theButtonDimensions, animationOfMouseSpringyCircles);
   buttons.push(theMouseSpringyCirclesButton);
 
   var theReactickleTitlePosition = createVector(0,0);
@@ -119,7 +111,7 @@ function setup() {
   var theReturnToMenuButtonPosition = createVector(0, windowHeight-theButtonDimensions.y);
   theReturnToMenuButton = new ReturnToMenuButton(theReturnToMenuButtonPosition,theButtonDimensions);
 
-  playAndLoopAllVideos();
+  //playAndLoopAllVideos();
 
   strokeWeight(strokeSize);
 }
@@ -188,7 +180,7 @@ function mouseReleased(){
         theReactickle = buttons[i].reactickleToRun; //get the reactickle to run from the button itself
         theReactickle.setup(); //set it up!
         theReactickleTitle.updateButtonText(buttons[i].title); //update the button to have the reactickle name in it too
-        stopAllVideos(); //no point playing the thumbnails if we can't see them
+        //stopAllVideos(); //no point playing the thumbnails if we can't see them
         break;
       }
     }
@@ -199,7 +191,7 @@ function mouseReleased(){
     if(theReturnToMenuButton.checkIfMouseOverButton(mouseX, mouseY)){
       menuScreen = true;
       reactickleScreen = false;
-      playAndLoopAllVideos();
+      //playAndLoopAllVideos();
     }
   }
 }
@@ -210,29 +202,29 @@ function windowResized(){
   }
 }
 
-function stopAllVideos(){
-  for(var i=0; i< videoThumbnails.length; i+=1){
-    videoThumbnails[i].stop();
-  }
-}
+// function stopAllVideos(){
+//   for(var i=0; i< videoThumbnails.length; i+=1){
+//     videoThumbnails[i].stop();
+//   }
+// }
 
-function playAndLoopAllVideos(){
-  for(var i=0; i< videoThumbnails.length; i+=1){
-    videoThumbnails[i].loop();
-  }
-}
+// function playAndLoopAllVideos(){
+//   for(var i=0; i< videoThumbnails.length; i+=1){
+//     videoThumbnails[i].loop();
+//   }
+// }
 
-function ReactickleButton(title, reactickleToRun, position, dimensions, videoThumbnail){
+function ReactickleButton(title, reactickleToRun, position, dimensions, animationThumbnail){
   this.title = title;
   this.reactickleToRun = reactickleToRun;
   this.position = position;
   this.dimensions = dimensions;
   this.highlightColour = color('rgb(255,0,0)');
-  this.videoThumbnail = videoThumbnail;
+  this.animationThumbnail = animationThumbnail;
   this.highlit = false;
 
   this.draw = function(){
-    image(this.videoThumbnail, this.position.x, this.position.y, this.dimensions.x, this.dimensions.y);
+    animation(this.animationThumbnail, this.position.x+(this.dimensions.x/2), this.position.y+(this.dimensions.y/2));
     if(this.highlit){
       stroke(this.highlightColour);
       noFill();
