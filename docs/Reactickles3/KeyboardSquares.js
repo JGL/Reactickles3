@@ -14,12 +14,14 @@ function KeyboardSquares(){
       bouncySquares.pop();
     }
     this.createSquares();
+    rectMode(CORNER);
   }
 
   this.draw = function(){
     rectMode(CENTER); // draw rects from their centres... https://p5js.org/reference/#/p5/rectMode
     background(255); //white background
     this.drawSquares();
+    rectMode(CORNER);
   }
 
   this.drawSquares = function(){

@@ -71,6 +71,7 @@ function KeyboardFountain(){
     this.moveFountain();
     this.drawFountain();
     this.drawCircles();
+    rectMode(CORNER);
   }
 
   this.moveFountain = function(){

@@ -118,9 +118,9 @@ function setup() {
 
 function draw() {
   if(menuScreen){
+    rectMode(CORNER); // making sure the buttons are drawn correctly
     background(255); //white background
     noStroke();
-
     fill(0);
     textFont(reactickles3Font);
     textSize(48);
@@ -225,6 +225,14 @@ function ReactickleButton(title, reactickleToRun, position, dimensions, animatio
 
   this.draw = function(){
     animation(this.animationThumbnail, this.position.x+(this.dimensions.x/2), this.position.y+(this.dimensions.y/2));
+
+    noStroke();
+    fill(0);
+    textFont(reactickles3Font);
+    textSize(18);
+    text(this.title, this.position.x+4, this.position.y+(this.dimensions.y/3), this.dimensions.x, this.dimensions.y);
+
+    //draw a highlight around the button, if necessary
     if(this.highlit){
       stroke(this.highlightColour);
       noFill();
@@ -254,12 +262,13 @@ function ReturnToMenuButton(position, dimensions){
   this.textColour = color('rgb(255,255,255)');
 
   this.draw = function(){
+    textFont(reactickles3Font);
     textSize(characterSize);
     noStroke();
     fill(this.backgroundColour);
     rect(this.position.x, this.position.y, this.dimensions.x, this.dimensions.y);
     fill(this.textColour);
-    text(this.title, this.position.x+textOffsetFromSideOfScreen, this.position.y+20, this.dimensions.x-textOffsetFromSideOfScreen, this.dimensions.y-20); //https://p5js.org/reference/#/p5/text
+    text(this.title, this.position.x+textOffsetFromSideOfScreen, this.position.y+(this.dimensions.y/3), this.dimensions.x-textOffsetFromSideOfScreen, this.dimensions.y); //https://p5js.org/reference/#/p5/text
   }
 
   this.checkIfMouseOverButton = function(aMouseX, aMouseY){
@@ -284,12 +293,13 @@ function ReactickleTitle(position, dimensions){
   this.textColour = color('rgb(255,255,255)');
 
   this.draw = function(){
+    textFont(reactickles3Font);
     textSize(characterSize);
     noStroke();
     fill(this.backgroundColour);
     rect(this.position.x, this.position.y, this.dimensions.x, this.dimensions.y);
     fill(this.textColour);
-    text(this.title, this.position.x+textOffsetFromSideOfScreen, this.position.y+20, this.dimensions.x-textOffsetFromSideOfScreen, this.dimensions.y-20); //https://p5js.org/reference/#/p5/text
+    text(this.title, this.position.x+textOffsetFromSideOfScreen, this.position.y+textOffsetFromSideOfScreen, this.dimensions.x-textOffsetFromSideOfScreen, this.dimensions.y); //https://p5js.org/reference/#/p5/text
   }
 
   this.updateButtonText = function(textToAdd){
